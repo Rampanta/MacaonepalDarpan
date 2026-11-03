@@ -5,6 +5,7 @@ on:
     - cron: '0 */1 * * *'
   workflow_dispatch:
 
+# यो लाइन सबैभन्दा Important - Push गर्न Permission
 permissions:
   contents: write
 
@@ -28,10 +29,17 @@ jobs:
       - name: Fetch All News
         run: python scripts/fetch_news_full.py
         
+      - name: Show files
+        run: |
+          ls -la
+          cat news.json || echo "news.json not found"
+          cat nepse.json || echo "nepse.json not found"
+        
       - name: Commit and Push
         run: |
           git config --global user.name 'MacaoNepalDarpan Bot'
           git config --global user.email 'bot@macaonepaldarpan.com'
           git add -f news.json nepse.json || true
-          git diff --quiet && git diff --staged --quiet || git commit -m "📰 Auto news"
-          git push
+          git diff --quiet && git diff --staged --quiet || git commit -m "📰 Auto: Kantipur, Gorkhapatra, Onlinekhabar, RSS Nepal, NepseAlpha - $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push || echo "Push failed, trying pull rebase"
+          git pull --rebase && git push || true
