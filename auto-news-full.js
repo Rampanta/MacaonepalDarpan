@@ -1,6 +1,3 @@
-// MacaoNepalDarpan - Final Auto News Display Code
-// Brand Colors: Blue #003893, Green #067747, Red #CE1126
-
 async function loadAllNews() {
   const newsContainer = document.getElementById('auto-news-container');
   const nepseContainer = document.getElementById('nepse-news-container');
@@ -115,4 +112,4 @@ async function loadAllNews() {
 // पेज लोड हुने बित्तिकै चलाउने
 document.addEventListener('DOMContentLoaded', loadAllNews);
 // हरेक 1 घण्टामा आफै Refresh
-setInterval(loadAllNews, 3600000)
+setInterval(loadAllNews, 3600000);
