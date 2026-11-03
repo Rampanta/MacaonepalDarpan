@@ -1,49 +1,73 @@
+// MacaoNepalDarpan - Final Auto News Display Code
+// Brand Colors: Blue #003893, Green #067747, Red #CE1126
+
 async function loadAllNews() {
   const newsContainer = document.getElementById('auto-news-container');
   const nepseContainer = document.getElementById('nepse-news-container');
   
-  if (!newsContainer) return;
+  if (!newsContainer && !nepseContainer) return;
 
   try {
-    // Load main news
-    const res = await fetch('./news.json?v=' + Date.now());
-    const data = await res.json();
-    
-    newsContainer.innerHTML = data.news.map(item => `
-      <article class="news-card">
-        <span class="source-badge">${item.source}</span>
-        <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
-        <p>${item.summary}...</p>
-        <time>${item.published}</time>
-      </article>
-    `).join('');
+    const timestamp = Date.now();
+    let news = [];
+    let nepse = [];
 
-    // Load NEPSE
-    if (nepseContainer) {
-      const nepseRes = await fetch('./nepse.json?v=' + Date.now());
-      const nepseData = await nepseRes.json();
-      
-      nepseContainer.innerHTML = `
-        <div class="nepse-grid">
-          ${nepseData.indices.map(i => `
-            <div class="nepse-item ${parseFloat(i.change) >= 0 ? 'up' : 'down'}">
-              <strong>${i.name}</strong>
-              <span>${i.value}</span>
-              <small>${i.change}</small>
-            </div>
-          `).join('')}
-        </div>
-        <small class="updated">Updated: ${new Date(nepseData.updated).toLocaleString('ne-NP')}</small>
-      `;
+    try {
+      const res = await fetch(`./news.json?v=${timestamp}`);
+      if (res.ok) news = await res.json();
+    } catch (e) {}
+
+    try {
+      const res2 = await fetch(`./nepse.json?v=${timestamp}`);
+      if (res2.ok) nepse = await res2.json();
+    } catch (e) {}
+
+    // नेपाल समाचार
+    if (newsContainer) {
+      if (!news || news.length === 0) {
+        newsContainer.innerHTML = `
+          <div style="text-align:center;padding:20px;background:#f8f9ff;border-radius:12px;border:1px dashed #003893">
+            <p style="color:#003893">📰 ताजा समाचार लोड हुँदैछ...<br><small>GitHub Actions मा Run Workflow थिच्नुस</small></p>
+          </div>`;
+      } else {
+        let html = `
+          <div style="margin:30px 0">
+            <h2 style="font-size:22px;font-weight:bold;color:#003893;border-left:5px solid #003893;padding-left:12px;margin-bottom:16px">
+              📰 ताजा समाचार - नेपालबाट
+            </h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">`;
+        
+        news.slice(0, 12).forEach(item => {
+          let bgColor = '#e3f2fd'; let borderColor = '#003893';
+          if (item.source.includes('गोरखापत्र')) { bgColor = '#ffebee'; borderColor = '#CE1126'; }
+          else if (item.source.includes('अनलाइनखबर')) { bgColor = '#e8f5e9'; borderColor = '#067747'; }
+          
+          html += `
+            <div style="background:white;border:1px solid #e0e0e0;border-left:4px solid ${borderColor};border-radius:10px;padding:14px">
+              <span style="font-size:11px;background:${bgColor};color:${borderColor};padding:3px 8px;border-radius:20px;font-weight:bold">${item.source}</span>
+              <h3 style="font-size:15px;font-weight:bold;margin:8px 0">${item.title}</h3>
+              <a href="${item.link}" target="_blank" style="font-size:13px;color:${borderColor};font-weight:bold;text-decoration:none">पुरा पढ्नुहोस् →</a>
+            </div>`;
+        });
+        html += `</div></div>`;
+        newsContainer.innerHTML = html;
+      }
     }
 
-  } catch (err) {
-    console.error('News load failed:', err);
-    newsContainer.innerHTML = '<p>समाचार लोड हुन सकेन। पछि प्रयास गर्नुहोस्।</p>';
+    // शेयर बजार
+    if (nepseContainer && nepse.length > 0) {
+      let html2 = `<div style="margin:30px 0"><h2 style="font-size:20px;font-weight:bold;color:#067747;border-left:5px solid #067747;padding-left:12px">📈 शेयर बजार - NEPSE</h2><div style="display:grid;gap:14px">`;
+      nepse.slice(0, 6).forEach(item => {
+        html2 += `<div style="background:#f0faf4;border-left:4px solid #067747;padding:14px;border-radius:10px"><h3 style="font-size:14px;font-weight:bold">${item.title}</h3><a href="${item.link}" target="_blank" style="color:#067747;font-weight:bold">विस्तृत →</a></div>`;
+      });
+      html2 += `</div></div>`;
+      nepseContainer.innerHTML = html2;
+    }
+
+  } catch (error) {
+    console.error(error);
   }
 }
 
-// Auto load on page load
 document.addEventListener('DOMContentLoaded', loadAllNews);
-// Refresh every 5 min
-setInterval(loadAllNews, 5 * 60 * 1000);
+setInterval(loadAllNews, 3600000);
