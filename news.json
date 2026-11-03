@@ -1,73 +1,146 @@
-// MacaoNepalDarpan - Final Auto News Display Code
-// Brand Colors: Blue #003893, Green #067747, Red #CE1126
-
-async function loadAllNews() {
-  const newsContainer = document.getElementById('auto-news-container');
-  const nepseContainer = document.getElementById('nepse-news-container');
-  
-  if (!newsContainer && !nepseContainer) return;
-
-  try {
-    const timestamp = Date.now();
-    let news = [];
-    let nepse = [];
-
-    try {
-      const res = await fetch(`./news.json?v=${timestamp}`);
-      if (res.ok) news = await res.json();
-    } catch (e) {}
-
-    try {
-      const res2 = await fetch(`./nepse.json?v=${timestamp}`);
-      if (res2.ok) nepse = await res2.json();
-    } catch (e) {}
-
-    // नेपाल समाचार
-    if (newsContainer) {
-      if (!news || news.length === 0) {
-        newsContainer.innerHTML = `
-          <div style="text-align:center;padding:20px;background:#f8f9ff;border-radius:12px;border:1px dashed #003893">
-            <p style="color:#003893">📰 ताजा समाचार लोड हुँदैछ...<br><small>GitHub Actions मा Run Workflow थिच्नुस</small></p>
-          </div>`;
-      } else {
-        let html = `
-          <div style="margin:30px 0">
-            <h2 style="font-size:22px;font-weight:bold;color:#003893;border-left:5px solid #003893;padding-left:12px;margin-bottom:16px">
-              📰 ताजा समाचार - नेपालबाट
-            </h2>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">`;
-        
-        news.slice(0, 12).forEach(item => {
-          let bgColor = '#e3f2fd'; let borderColor = '#003893';
-          if (item.source.includes('गोरखापत्र')) { bgColor = '#ffebee'; borderColor = '#CE1126'; }
-          else if (item.source.includes('अनलाइनखबर')) { bgColor = '#e8f5e9'; borderColor = '#067747'; }
-          
-          html += `
-            <div style="background:white;border:1px solid #e0e0e0;border-left:4px solid ${borderColor};border-radius:10px;padding:14px">
-              <span style="font-size:11px;background:${bgColor};color:${borderColor};padding:3px 8px;border-radius:20px;font-weight:bold">${item.source}</span>
-              <h3 style="font-size:15px;font-weight:bold;margin:8px 0">${item.title}</h3>
-              <a href="${item.link}" target="_blank" style="font-size:13px;color:${borderColor};font-weight:bold;text-decoration:none">पुरा पढ्नुहोस् →</a>
-            </div>`;
-        });
-        html += `</div></div>`;
-        newsContainer.innerHTML = html;
-      }
-    }
-
-    // शेयर बजार
-    if (nepseContainer && nepse.length > 0) {
-      let html2 = `<div style="margin:30px 0"><h2 style="font-size:20px;font-weight:bold;color:#067747;border-left:5px solid #067747;padding-left:12px">📈 शेयर बजार - NEPSE</h2><div style="display:grid;gap:14px">`;
-      nepse.slice(0, 6).forEach(item => {
-        html2 += `<div style="background:#f0faf4;border-left:4px solid #067747;padding:14px;border-radius:10px"><h3 style="font-size:14px;font-weight:bold">${item.title}</h3><a href="${item.link}" target="_blank" style="color:#067747;font-weight:bold">विस्तृत →</a></div>`;
-      });
-      html2 += `</div></div>`;
-      nepseContainer.innerHTML = html2;
-    }
-
-  } catch (error) {
-    console.error(error);
+[
+  {
+    "source": "कान्तिपुर",
+    "title": "कान्तिपुर - ताजा समाचार अपडेट हुँदैछ",
+    "link": "https://ekantipur.com",
+    "published": "",
+    "summary": "RSS बाट समाचार ल्याउने प्रयास हुँदैछ, केही समयमा अपडेट हुन्छ",
+    "fetched_at": "2026-11-03T05:46:51.794088",
+    "category": "news"
+  },
+  {
+    "source": "गोरखापत्र",
+    "title": "असनको व्यापारपछि घर जाने तरखर  (फोटो फिचर)",
+    "link": "https://gorkhapatraonline.com/news/228144",
+    "published": "Tue, 03 Nov 2026 11:26:37 +0545",
+    "summary": "कविता थापा काठमाडौँ, कात्तिक १७ गते । बिहान ८ बजेसम्म मात्र तरकारी बेच्न पाइन्छ असनमा। ८ बजेपछि साइरन बज्छ , सबैले व्यापार व्यवसाय बन्द गर्नुपर्छ।भर्ख...",
+    "fetched_at": "2026-11-03T05:46:52.928117",
+    "category": "news"
+  },
+  {
+    "source": "गोरखापत्र",
+    "title": "लिमीवासीलाई खाद्यान्नको चिन्ता",
+    "link": "https://gorkhapatraonline.com/news/228143",
+    "published": "Tue, 03 Nov 2026 11:22:52 +0545",
+    "summary": "हुम्ला समाचारदाताहुम्ला, कात्तिक १७ गते । उत्तरी क्षेत्रको नाम्खा गाउँपालिका–६ को हिमालपारिको गाउँ लिमीका तीन वटा बस्तीका स्थानीयवासीलाई यस वर्ष हिउँद...",
+    "fetched_at": "2026-11-03T05:46:52.928133",
+    "category": "news"
+  },
+  {
+    "source": "गोरखापत्र",
+    "title": "सुनको मूल्य बढ्यो, चाँदीको घट्यो",
+    "link": "https://gorkhapatraonline.com/news/228142",
+    "published": "Tue, 03 Nov 2026 11:21:59 +0545",
+    "summary": "काठमाडौँ, कात्तिक १७ गते । स्थानीय बजारमा आज सुनको मूल्य प्रतितोला ७०० रुपियाँले बढेको छ भने चाँदीको मूल्य ४५ रुपियाँले घटेको छ ।नेपाल सुनचाँदी व्यवसा...",
+    "fetched_at": "2026-11-03T05:46:52.928139",
+    "category": "news"
+  },
+  {
+    "source": "गोरखापत्र",
+    "title": "खाद्य कम्पनीले समयमै धान खरिद नगर्दा सस्तोमा बेच्न बाध्य किसान",
+    "link": "https://gorkhapatraonline.com/news/228141",
+    "published": "Tue, 03 Nov 2026 11:21:33 +0545",
+    "summary": "सिराज खाननेपालगन्ज, कात्तिक १७ गते । पश्चिम नेपालमा सबैभन्दा बढी धान उत्पादन हुने जिल्लामध्ये एक बाँकेमा खाद्य व्यवस्था तथा व्यापार कम्पनी लिमिटेडले स...",
+    "fetched_at": "2026-11-03T05:46:52.928149",
+    "category": "news"
+  },
+  {
+    "source": "गोरखापत्र",
+    "title": "केशम टापुमा अमेरिकी आक्रमण",
+    "link": "https://gorkhapatraonline.com/news/228140",
+    "published": "Tue, 03 Nov 2026 11:08:53 +0545",
+    "summary": "वासिङ्टन, कात्तिक १७ गते । इरानसँग आठ महिनादेखि जारी द्वन्द्व अन्त्य गर्न वार्तामा प्रगति भइरहेको सङ्केत अमेरिकाका राष्ट्रपति डोनाल्ड ट्रम्पले दिइरहेक...",
+    "fetched_at": "2026-11-03T05:46:52.928155",
+    "category": "news"
+  },
+  {
+    "source": "अनलाइनखबर",
+    "title": "‘रामायण’ मा सीता बनेकी पल्लवी : मेकअप नरुचाउने, डन्डिफोरको धेरै चर्चा",
+    "link": "https://www.onlinekhabar.com/2026/11/2049934/pallavi-who-played-sita-in-ramayana-she-doesnt-like-makeup-there-is-a-lot-of-talk-about-dandruff",
+    "published": "Tue, 03 Nov 2026 05:39:24 +0000",
+    "summary": "नितेश तिवारीको बहुचर्चित तथा ठूलो बजेटको फिल्म रामायण  तिहारको अवसरमा विश्वव्यापी रूपमा प्रदर्शन हुँदैछ । यस सिनेमामा रणबीर कपूर राम, यश रावण र साई पल...",
+    "fetched_at": "2026-11-03T05:46:53.792846",
+    "category": "news"
+  },
+  {
+    "source": "अनलाइनखबर",
+    "title": "आज र भोलि बालबालिकालाई भिटामिन र जुकाको औषधि खुवाइँदै",
+    "link": "https://www.onlinekhabar.com/2026/11/2049930/children-are-being-given-vitamins-and-deworming-medicine-today-and-tomorrow",
+    "published": "Tue, 03 Nov 2026 05:32:33 +0000",
+    "summary": "उक्त कार्यक्रमअन्तर्गत भिटामिन ‘ए’ क्याप्सुल छ महिनादेखि ५९ महिनाका बालबालिका र जुकाको औषधि एक वर्षदेखि पाँच वर्षसम्मका बालबालिकालाई खुवाइँदैछ ।...",
+    "fetched_at": "2026-11-03T05:46:53.792860",
+    "category": "news"
+  },
+  {
+    "source": "अनलाइनखबर",
+    "title": "युक्रेनमा रुसी हवाई आक्रमण : २६ जनाको मृत्यु, २७ जना बेपत्ता",
+    "link": "https://www.onlinekhabar.com/2026/11/2049906/russian-airstrikes-in-ukraine-26-dead-27-missing",
+    "published": "Tue, 03 Nov 2026 05:30:43 +0000",
+    "summary": "१७ कात्तिक, काठमाडौं । युक्रेनको दक्षिणी जापोरिजिया क्षेत्रमा रुसी सेनाको हवाई आक्रमणमा २६ जनाको मृत्यु भएको छ । दक्षिणी जापोरिजिया क्षेत्रमा पर्ने को...",
+    "fetched_at": "2026-11-03T05:46:53.792866",
+    "category": "news"
+  },
+  {
+    "source": "अनलाइनखबर",
+    "title": "हानि तथा नोक्सानी कोष : नजिर बस्यो, न्याय बाँकी छ",
+    "link": "https://www.onlinekhabar.com/2026/11/2049870/loss-and-damage-fund-a-precedent-has-been-set-justice-awaits",
+    "published": "Tue, 03 Nov 2026 05:20:12 +0000",
+    "summary": "बाढीपहिरोको क्षति सम्बोधन गर्न नेपालले २ करोड अमेरिकी डलर सहायता पाउने निर्णय अन्तर्राष्ट्रिय जलवायु कूटनीतिमा एउटा ऐतिहासिक नजिर त हो; तर ११ खर्ब रुप...",
+    "fetched_at": "2026-11-03T05:46:53.792871",
+    "category": "news"
+  },
+  {
+    "source": "अनलाइनखबर",
+    "title": "तिहारमा प्लास्टिकका फूलमाला बेचे जफत हुने",
+    "link": "https://www.onlinekhabar.com/2026/11/2049918/plastic-flower-garlands-sold-during-tihar-will-be-confiscated",
+    "published": "Tue, 03 Nov 2026 05:13:47 +0000",
+    "summary": "१७ कात्तिक, काठमाडौं । नजिकिँदै गरेको दीपावली (तिहार) पर्वलाई लक्षित गर्दै काठमाडौं महानगरपालिकाले आफ्नो क्षेत्रभित्र प्लास्टिकजन्य फूल, फूलको माला तथ...",
+    "fetched_at": "2026-11-03T05:46:53.792876",
+    "category": "news"
+  },
+  {
+    "source": "RSS Nepal",
+    "title": "‘रामायण’ मा सीता बनेकी पल्लवी : मेकअप नरुचाउने, डन्डिफोरको धेरै चर्चा",
+    "link": "https://www.onlinekhabar.com/2026/11/2049934/pallavi-who-played-sita-in-ramayana-she-doesnt-like-makeup-there-is-a-lot-of-talk-about-dandruff",
+    "published": "Tue, 03 Nov 2026 05:39:24 +0000",
+    "summary": "नितेश तिवारीको बहुचर्चित तथा ठूलो बजेटको फिल्म रामायण  तिहारको अवसरमा विश्वव्यापी रूपमा प्रदर्शन हुँदैछ । यस सिनेमामा रणबीर कपूर राम, यश रावण र साई पल...",
+    "fetched_at": "2026-11-03T05:46:53.913229",
+    "category": "news"
+  },
+  {
+    "source": "RSS Nepal",
+    "title": "आज र भोलि बालबालिकालाई भिटामिन र जुकाको औषधि खुवाइँदै",
+    "link": "https://www.onlinekhabar.com/2026/11/2049930/children-are-being-given-vitamins-and-deworming-medicine-today-and-tomorrow",
+    "published": "Tue, 03 Nov 2026 05:32:33 +0000",
+    "summary": "उक्त कार्यक्रमअन्तर्गत भिटामिन ‘ए’ क्याप्सुल छ महिनादेखि ५९ महिनाका बालबालिका र जुकाको औषधि एक वर्षदेखि पाँच वर्षसम्मका बालबालिकालाई खुवाइँदैछ ।...",
+    "fetched_at": "2026-11-03T05:46:53.913242",
+    "category": "news"
+  },
+  {
+    "source": "RSS Nepal",
+    "title": "युक्रेनमा रुसी हवाई आक्रमण : २६ जनाको मृत्यु, २७ जना बेपत्ता",
+    "link": "https://www.onlinekhabar.com/2026/11/2049906/russian-airstrikes-in-ukraine-26-dead-27-missing",
+    "published": "Tue, 03 Nov 2026 05:30:43 +0000",
+    "summary": "१७ कात्तिक, काठमाडौं । युक्रेनको दक्षिणी जापोरिजिया क्षेत्रमा रुसी सेनाको हवाई आक्रमणमा २६ जनाको मृत्यु भएको छ । दक्षिणी जापोरिजिया क्षेत्रमा पर्ने को...",
+    "fetched_at": "2026-11-03T05:46:53.913248",
+    "category": "news"
+  },
+  {
+    "source": "RSS Nepal",
+    "title": "हानि तथा नोक्सानी कोष : नजिर बस्यो, न्याय बाँकी छ",
+    "link": "https://www.onlinekhabar.com/2026/11/2049870/loss-and-damage-fund-a-precedent-has-been-set-justice-awaits",
+    "published": "Tue, 03 Nov 2026 05:20:12 +0000",
+    "summary": "बाढीपहिरोको क्षति सम्बोधन गर्न नेपालले २ करोड अमेरिकी डलर सहायता पाउने निर्णय अन्तर्राष्ट्रिय जलवायु कूटनीतिमा एउटा ऐतिहासिक नजिर त हो; तर ११ खर्ब रुप...",
+    "fetched_at": "2026-11-03T05:46:53.913252",
+    "category": "news"
+  },
+  {
+    "source": "RSS Nepal",
+    "title": "तिहारमा प्लास्टिकका फूलमाला बेचे जफत हुने",
+    "link": "https://www.onlinekhabar.com/2026/11/2049918/plastic-flower-garlands-sold-during-tihar-will-be-confiscated",
+    "published": "Tue, 03 Nov 2026 05:13:47 +0000",
+    "summary": "१७ कात्तिक, काठमाडौं । नजिकिँदै गरेको दीपावली (तिहार) पर्वलाई लक्षित गर्दै काठमाडौं महानगरपालिकाले आफ्नो क्षेत्रभित्र प्लास्टिकजन्य फूल, फूलको माला तथ...",
+    "fetched_at": "2026-11-03T05:46:53.913258",
+    "category": "news"
   }
-}
-
-document.addEventListener('DOMContentLoaded', loadAllNews);
-setInterval(loadAllNews, 3600000);
+]
