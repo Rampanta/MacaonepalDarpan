@@ -112,4 +112,4 @@ def fetch_all():
             f.write("[]")
 
 if __name__ == "__main__":
-    fetch_all()
+    fetch_all
