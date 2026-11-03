@@ -115,4 +115,4 @@ async function loadAllNews() {
 // पेज लोड हुने बित्तिकै चलाउने
 document.addEventListener('DOMContentLoaded', loadAllNews);
 // हरेक 1 घण्टामा आफै Refresh
-setInterval(loadAllNews, 3600000);
+setInterval(loadAllNews, 3600000)
