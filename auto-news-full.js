@@ -90,4 +90,4 @@ if (document.readyState === 'loading') {
   setTimeout(loadAllNews, 500);
   setTimeout(loadAllNews, 2000);
 }
-setInterval(loadAllNews, 3600000);
+setInterval(loadAllNews, 3600000)
